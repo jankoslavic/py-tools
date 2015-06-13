@@ -93,6 +93,7 @@ def _rainflow(ext, exttime=None):
 def rainflow(sig, time_sig = None, clsn=-1):
     """Rainflow counting method
 
+        (amplitude, mean, cycles) = rainflow(sig, time_sig, clsn) #if time_sig=None
         (amplitude, mean, cycles, start_time, period) = rainflow(sig, time_sig, clsn)
 
     :param sig: signal as numpy array
