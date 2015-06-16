@@ -7,7 +7,7 @@ _file = 'rainflow'
 _path = os.path.join(*(os.path.split(__file__)[:-1] + (_file,)))
 _rf = ctypes.cdll.LoadLibrary(_path)
 
-def sig2ext(sig, time_sig = None, clsn=-1):
+def _sig2ext(sig, time_sig = None, clsn=-1):
     """Converts signal ``sig`` to turning  points used by ``rainflow``. The
     syntax is: ::
 
@@ -21,30 +21,32 @@ def sig2ext(sig, time_sig = None, clsn=-1):
     :param clsn: number of classes (pass -1 if not to be used, i.e., no divisions into classes)
     :return (ntp, ext, exttime):
     """
+    sig = np.asarray(sig, dtype=float)
     sig = np.ascontiguousarray(sig)
     ext = np.ascontiguousarray(np.zeros_like(sig))
     exttime = np.ascontiguousarray(np.zeros_like(sig))
     try:
-        _sig2ext = _rf.sig2ext
-        _sig2ext.restype = ctypes.c_int
+        __sig2ext = _rf.sig2ext
+        __sig2ext.restype = ctypes.c_int
         if time_sig is None:
-            _sig2ext.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
+            __sig2ext.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
                                  ctypes.c_voidp,#ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
                                  ctypes.c_int,
                                  ctypes.c_long,
                                  ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
                                  ndpointer(ctypes.c_double, flags="C_CONTIGUOUS")]
-            ntp = _sig2ext(sig, None, len(sig), clsn,
+            ntp = __sig2ext(sig, None, len(sig), clsn,
                                 ext, exttime)
         else:
-            _sig2ext.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
+            __sig2ext.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
                                  ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
                                  ctypes.c_int,
                                  ctypes.c_long,
                                  ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),
                                  ndpointer(ctypes.c_double, flags="C_CONTIGUOUS")]
+            time_sig = np.asarray(time_sig, dtype=float)
             time_sig = np.ascontiguousarray(time_sig)
-            ntp = _sig2ext(sig, time_sig, len(sig), clsn,
+            ntp = __sig2ext(sig, time_sig, len(sig), clsn,
 
                            ext, exttime)
     except:
@@ -106,7 +108,7 @@ def rainflow(sig, time_sig = None, clsn=-1):
            start_time: Begining time (when input includes exttime),
            period:     Cycle period (when input includes exttime),
     """
-    (ntp, ext, exttime) = sig2ext(sig=sig, time_sig=time_sig, clsn=clsn)
+    (ntp, ext, exttime) = _sig2ext(sig=sig, time_sig=time_sig, clsn=clsn)
     if time_sig is None:
         (_, rf) = _rainflow(ext[:ntp])
     else:
