@@ -1,0 +1,1 @@
+This is the implementation of the rainflow algorithm based on  Primoz Cermelj and Adam Nieslony's code.

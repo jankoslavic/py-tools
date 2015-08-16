@@ -1,0 +1,1 @@
+This is an example on how to compile and use C code inside py. See also the Compiling C with... ipython notebook.
