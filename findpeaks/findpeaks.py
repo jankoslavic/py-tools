@@ -49,6 +49,7 @@ if __name__ == '__main__':
 
     peaks = findpeaks(x, spacing=100, limit=4.)
     plt.plot(t, x)
+    plt.axhline(4, color='r')
     plt.plot(t[peaks], x[peaks], 'ro')
     plt.title('Peaks: minimum value 4., minimum width 100 points')
     plt.show()
