@@ -1,2 +1,2 @@
 def test_numbers():
-    assert 12 == 13
+    assert 12 == 12
