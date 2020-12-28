@@ -16,20 +16,20 @@ def findpeaks(data, spacing=1, limit=None):
     :param limit: peaks should have value greater or equal
     :return:
     """
-    len = data.size
-    x = np.zeros(len+2*spacing)
+    ln = data.size
+    x = np.zeros(ln+2*spacing)
     x[:spacing] = data[0]-1.e-6
     x[-spacing:] = data[-1]-1.e-6
-    x[spacing:spacing+len] = data
-    peak_candidate = np.zeros(len)
+    x[spacing:spacing+ln] = data
+    peak_candidate = np.zeros(ln)
     peak_candidate[:] = True
     for s in range(spacing):
         start = spacing - s - 1
-        h_b = x[start : start + len]  # before
+        h_b = x[start : start + ln]  # before
         start = spacing
-        h_c = x[start : start + len]  # central
+        h_c = x[start : start + ln]  # central
         start = spacing + s + 1
-        h_a = x[start : start + len]  # after
+        h_a = x[start : start + ln]  # after
         peak_candidate = np.logical_and(peak_candidate, np.logical_and(h_c > h_b, h_c > h_a))
 
     ind = np.argwhere(peak_candidate)
